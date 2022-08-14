@@ -27,20 +27,20 @@ qtd_dias_mes = monthrange(year, month)
 
 # Pegando informações que serão utilizadas para fazer a distribuição dos plantonistas no mês
 jsonFile = ReadFileJson(file="dados/dados_post.json")
-dados = jsonFile.getData()
+obj_todos_meses = jsonFile.getData()
 
 distribuicao = Distribuicao()
 
 # Fazendo a separação do mês (utilizando o mês atual) e fazendo a distribuição dos plantonistas
-for dado in dados:
-  if dado['mes'] == month:
+for obj_mes in obj_todos_meses:
+  if obj_mes['mes'] == month:
 
     # O 'tipo-distribuicao' tem influência na distribuição dos dias dos plantonistas
     # Ela é responsável por dar mais flexibilidade na hora de passar as informações (que está no dados_post.json)
     # Quando é 'generico' significa que tem um padrão e que é repetido conforme a quantidade informada nas colunas 'revezamento-por-dias' e 'quem-inicia-o-mes' (do dados_post.json)
     # Quando é 'detalhado' precisa ser informado os dias que cada plantonista vai atuar 
-    if dado['tipo-distribuicao'] == 'generico': 
-      distribuicao.getDistribuicaoGenerica(dado, qtd_dias_mes[1])
+    if obj_mes['tipo-distribuicao'] == 'generico': 
+      distribuicao.getDistribuicaoGenerica(obj_mes, qtd_dias_mes[1])
 
-    elif dado['tipo-distribuicao'] == 'detalhado':    
+    elif obj_mes['tipo-distribuicao'] == 'detalhado':    
       distribuicao.getDistribuicaoDetalhada()
