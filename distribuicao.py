@@ -1,41 +1,85 @@
 
 
 class Distribuicao():
+  # def __init__(self):
+  #   self.plantonistas = plantonistas
 
   def getDistribuicaoGenerica(self, obj_mes, qtd_dias_mes):
     dia                           = 0
     revezamento_contador          = 0
     plantonista_contador          = 0
     qtd_de_plantonista            = len(obj_mes['plantonistas'])
-    qtd_dias_plantonista_inicia   = obj_mes['quem-inicia-o-mes']['qtd-dias']
+    qtd_dias_plantonista_inicial  = obj_mes['quem-inicia-o-mes']['qtd-dias']
+    nome_plantonista_inicial      = obj_mes['quem-inicia-o-mes']['nome']
     revezamento_dias              = obj_mes['revezamento-por-dias']
-    
-    print(f"Quantidade de Plantonista: {qtd_de_plantonista}")
+    fez_correcao_revezamento      = False
 
     while dia < qtd_dias_mes:
-      
-      if dia < qtd_dias_plantonista_inicia:
-        self.imprimePlantonistaDoDia(dia, plantonista_inicia=True, mes=obj_mes, plantonista_contador=plantonista_contador)
+      # Verificação no segundo dia (variavel 'dia' inicia com 0) 
+      # Se o plantonista já deu inicio deve atualizar o contador na mesma quantidade que ele deu inicio
+      if not fez_correcao_revezamento:
+        fez_correcao_revezamento = True
+        revezamento_contador = self.corrigeContadorRevezamento(
+          nome_plantonista_inicial, 
+          qtd_dias_plantonista_inicial, 
+          obj_mes['plantonistas'], 
+          plantonista_contador,
+          revezamento_contador
+        )
+
+      # Verifica se 'qtd_dias_plantonista_inicial' é maior que 'revezamento_dias'
+      # se for verdade ele para a aplicação, pois não confere com a regra da aplicação.
+      if self.validaQtdDias(qtd_dias_plantonista_inicial, revezamento_dias):
+        break
+
+      # if dia < qtd_dias_plantonista_inicial:
+      #   self.imprimePlantonistaDoDia(dia, plantonista_inicia=True, mes=obj_mes, plantonista_contador=plantonista_contador)
+      #   dia += 1
+      # else:
+
+      # Quando a lista de plantonista chega ao fim precisa voltar ao inicio
+      if plantonista_contador == qtd_de_plantonista:
+        plantonista_contador = self.mudaPlantonista(plantonista_contador, qtd_de_plantonista)
+
+      # Imprime Plantonista conforme a quantidade de dias do revezamento (ex: revezamento_dias = 3)
+      if revezamento_contador < revezamento_dias:
+        revezamento_contador += 1
+        self.imprimePlantonistaDoDia(dia, False, obj_mes, plantonista_contador)
         dia += 1
       else:
+        revezamento_contador = 0
+        plantonista_contador = self.mudaPlantonista(plantonista_contador, qtd_de_plantonista)
 
-        # TODO: Precisa fazer verificação se o plantonista já deu inicio deve pular um dia no loop
-        # if nome_plantonista_inicia == obj_mes['plantonistas'][plantonista_contador]['nome']:
-        # print(f"DD: {dia+1} | Plant: {obj_mes['plantonistas'][plantonista_contador]['nome']}")
-        
-        # Quando a lista de plantonista chega ao fim precisa voltar ao inicio
-        if  plantonista_contador == qtd_de_plantonista:
-          plantonista_contador = self.mudaPlantonista(plantonista_contador, qtd_de_plantonista)
 
-        # Imprime Plantonista conforme a quantidade de dias do revezamento (ex: revezamento_dias = 3)
-        if revezamento_contador < revezamento_dias:
-          revezamento_contador += 1
-          self.imprimePlantonistaDoDia(dia=dia, plantonista_inicia=False, mes=obj_mes, plantonista_contador=plantonista_contador)
-          dia += 1
-        else:
-          revezamento_contador = 0
-          plantonista_contador = self.mudaPlantonista(plantonista_contador, qtd_de_plantonista)
 
+  def validaQtdDias(self, qtd_dias_plantonista_inicial, revezamento_dias):
+    if qtd_dias_plantonista_inicial > revezamento_dias:
+      print("-------------------------------[ERROR]--------------------------------")
+      print(f"O valor de 'qtd_dias_plantonista_inicial'({qtd_dias_plantonista_inicial})")
+      print(f"Não pode passar da quantidade do 'revezamento_dias'({revezamento_dias})")
+      print("----------------------------------------------------------------------")
+      return True
+    else:
+      return False
+
+
+  # Método que atualiza o 'revezamento_contador' (retornando a correção para que não repita o plantonista)
+  def corrigeContadorRevezamento(self, nome_plantonista_inicial, qtd_dias_plantonista_inicial, obj_plantonistas, plantonista_contador, revezamento_contador):
+    revezamento = 0
+
+    # TODO: FAZER UMA BUSCA PARA SABER QUAL É O INDEX DO "nome_plantonista_inicial" NA LISTA DOS PLANTONISTAS
+    #       COM ISSO PRECISARIA REORDENAR A LISTA COLOCANDO O quem-inicia-o-mes COMO PRIMEIRO, COM ISSO RESOLVERIA
+
+    # Pernalonga == Gaguinho
+    if nome_plantonista_inicial == obj_plantonistas[plantonista_contador]['nome']:
+      if qtd_dias_plantonista_inicial == 3:
+        revezamento = revezamento_contador + 0
+      elif qtd_dias_plantonista_inicial == 2:
+        revezamento = revezamento_contador + 1
+      elif qtd_dias_plantonista_inicial == 1:
+        revezamento = revezamento_contador + 2
+      
+    return revezamento
 
 
   def imprimePlantonistaDoDia(self, dia, plantonista_inicia, mes, plantonista_contador):
