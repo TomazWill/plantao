@@ -19,7 +19,7 @@ class Distribution():
       # Se o plantonista já deu inicio deve atualizar o contador na mesma quantidade que ele deu inicio
       if not fez_correcao_revezamento:
         fez_correcao_revezamento = True
-        revezamento_contador = self.change_workers_accountant(
+        revezamento_contador = self.change_workers_counter(
           nome_plantonista_inicial, 
           qtd_dias_plantonista_inicial, 
           obj_mes['plantonistas'], 
@@ -31,11 +31,6 @@ class Distribution():
       # se for verdade ele para a aplicação, pois não confere com a regra da aplicação.
       if self.validate_number_of_days(qtd_dias_plantonista_inicial, revezamento_dias):
         break
-
-      # if dia < qtd_dias_plantonista_inicial:
-      #   self.get_worker_on_call_per_day(dia, plantonista_inicia=True, mes=obj_mes, plantonista_contador=plantonista_contador)
-      #   dia += 1
-      # else:
 
       # Quando a lista de plantonista chega ao fim precisa voltar ao inicio
       if plantonista_contador == qtd_de_plantonista:
@@ -64,7 +59,7 @@ class Distribution():
 
 
   # Método que atualiza o 'revezamento_contador' (retornando a correção para que não repita o plantonista)
-  def change_workers_accountant(self, nome_plantonista_inicial, qtd_dias_plantonista_inicial, obj_plantonistas, plantonista_contador, revezamento_contador):
+  def change_workers_counter(self, nome_plantonista_inicial, qtd_dias_plantonista_inicial, obj_plantonistas, plantonista_contador, revezamento_contador):
     revezamento = 0
 
     # TODO: FAZER UMA BUSCA PARA SABER QUAL É O INDEX DO "nome_plantonista_inicial" NA LISTA DOS PLANTONISTAS
