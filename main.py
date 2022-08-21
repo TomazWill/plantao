@@ -1,10 +1,10 @@
 import json
 from utils.read_json_file import ReadFileJson
 
-from constants    import GENERIC_DISTRIBUTION_TYPE, DETAILED_DISTRIBUTION_TYPE
-from plantonista  import Plantonista
-from distribution import Distribution
-from journey      import Journey
+from constants      import GENERIC_DISTRIBUTION_TYPE, DETAILED_DISTRIBUTION_TYPE
+from on_duty_worker import OnDutyWorker
+from distribution   import Distribution
+from journey        import Journey
 
 # Iniciando Jornada
 journey = Journey()
@@ -12,8 +12,11 @@ print(journey)
 print("---------------------------------")
 
 
-# TODO: Fazer o uso da classe Plantonista
-# plantonista = Plantonista(nome="", telefone="")
+# TODO: Fazer o uso da classe OnDutyWorker
+# for i in range(0,10):
+#   worker = OnDutyWorker(nome=f"Teste-{i}", telefone=f"{i}-123456789")
+#   worker.add_worker_to_list()
+#   print(f"[{i}] {worker.get_name()}")
 
 
 
