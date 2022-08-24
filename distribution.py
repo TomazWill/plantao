@@ -1,8 +1,35 @@
+from constants import GENERIC_DISTRIBUTION_TYPE, DETAILED_DISTRIBUTION_TYPE
 
 
 class Distribution():
-  # def __init__(self):
-  #   self.plantonistas = plantonistas
+  def __init__(self):
+    self.on_call_workers = []
+
+  def set_on_call_workers(self, day_and_worker):
+    self.on_call_workers.append(day_and_worker)
+
+  def get_on_call_workers(self):
+    return self.on_call_workers
+
+  def get_workers_of_current_month(self, month_object):
+    return month_object['plantonistas']
+
+  def filter_data_current_month(self, list_of_months, current_month):
+    '''Retorna os dados o mês atual'''
+    for month_object in list_of_months:
+      if month_object['mes'] == current_month:
+          return month_object
+
+  def get_distribution_data_current_month(self, month_object, number_of_days_of_the_journey):
+    '''Faz a separação do mês (utilizando o mês atual) e fazendo a distribuição dos plantonistas'''
+    # O 'tipo-distribuicao' tem influência na distribuição dos dias dos plantonistas
+    # Ela é responsável por dar mais flexibilidade na hora de passar as informações (que está no dados_post.json)
+    # Quando é 'generico' significa que tem um padrão e que é repetido conforme a quantidade informada nas colunas 'revezamento-por-dias' e 'quem-inicia-o-mes' (do dados_post.json)
+    # Quando é 'detalhado' precisa ser informado os dias que cada plantonista vai atuar 
+    if month_object['tipo-distribuicao'] == GENERIC_DISTRIBUTION_TYPE: 
+      self.get_generic_distribution(month_object, number_of_days_of_the_journey)
+    elif month_object['tipo-distribuicao'] == DETAILED_DISTRIBUTION_TYPE:    
+      self.get_detailed_distribution()
 
   def get_generic_distribution(self, month_object, number_of_days_in_the_month):
     day                               = 0
@@ -39,7 +66,7 @@ class Distribution():
       # Imprime Plantonista conforme a quantidade de dias do revezamento (ex: rotation__by_days = 3)
       if rotation__counter < rotation__by_days:
         rotation__counter += 1
-        self.get_worker_on_call_per_day(day, False, month_object, on_call_workers__counter)
+        self.save_worker_on_call_per_day(day, False, month_object, on_call_workers__counter)
         day += 1
       else:
         rotation__counter = 0
@@ -80,11 +107,13 @@ class Distribution():
     return rotation
 
 
-  def get_worker_on_call_per_day(self, day, is_the_first_worker, mes, on_call_workers__counter):
+  def save_worker_on_call_per_day(self, day, is_the_first_worker, mes, on_call_workers__counter):
     if is_the_first_worker == True:
-      print(f"Dia: {day+1} | Plantonista: {mes['quem-inicia-o-mes']['nome']}")
+      self.set_on_call_workers({'day':day+1, 'month':mes['quem-inicia-o-mes']['nome']})
+      # print(f"Dia: {day+1} | Plantonista: {mes['quem-inicia-o-mes']['nome']}")
     else:
-      print(f"Dia: {day+1} | Plantonista: {mes['plantonistas'][on_call_workers__counter]['nome']}")
+      self.set_on_call_workers({'day':day+1, 'month':mes['plantonistas'][on_call_workers__counter]['nome']})
+      # print(f"Dia: {day+1} | Plantonista: {mes['plantonistas'][on_call_workers__counter]['nome']}")
       
 
   def change_worker(self, on_call_workers__counter, on_call_workers__number):
