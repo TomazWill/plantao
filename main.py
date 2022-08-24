@@ -15,12 +15,12 @@ jsonFile = ReadFileJson(file="dados/dados_post.json")
 list_of_months = jsonFile.get_full_data()
 
 distribution = Distribution()
-
-distribution.get_workers_of_current_month()
-# print(f"Distribution:::\n {distribution.get_on_call_workers()}")
+current_month_object = distribution.filter_data_current_month(list_of_months, journey.month)
 
 
-distribution.get_distribution_data_current_month(list_of_months, journey.month, journey.get_number_of_days_of_the_journey())
+print(f"current_month_object:::\n {distribution.get_workers_of_current_month(current_month_object)}")
+
+distribution.get_distribution_data_current_month(current_month_object, journey.get_number_of_days_of_the_journey())
 print(f"Distribution:::\n {distribution.get_on_call_workers()}")
 
 

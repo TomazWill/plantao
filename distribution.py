@@ -11,29 +11,25 @@ class Distribution():
   def get_on_call_workers(self):
     return self.on_call_workers
 
-  def get_workers_of_current_month(self):
-    # for i in range(0,10):
-    #   worker = OnDutyWorker(nome=f"Teste-{i}", telefone=f"{i}-123456789")
-    #   worker.add_worker_to_list()
-    #   print(f"[{i}] {worker.get_name()}")
-    
-    # TODO: Continuar aqui, precisa pegar os workers e adicionar na lista com método add_worker_to_list (OnDutyWorker).
-    # month_object['plantonistas']
-    
-    pass
+  def get_workers_of_current_month(self, month_object):
+    return month_object['plantonistas']
 
-  def get_distribution_data_current_month(self, list_of_months, current_month, number_of_days_of_the_journey):
-    '''Faz a separação do mês (utilizando o mês atual) e fazendo a distribuição dos plantonistas'''
+  def filter_data_current_month(self, list_of_months, current_month):
+    '''Retorna os dados o mês atual'''
     for month_object in list_of_months:
       if month_object['mes'] == current_month:
-        # O 'tipo-distribuicao' tem influência na distribuição dos dias dos plantonistas
-        # Ela é responsável por dar mais flexibilidade na hora de passar as informações (que está no dados_post.json)
-        # Quando é 'generico' significa que tem um padrão e que é repetido conforme a quantidade informada nas colunas 'revezamento-por-dias' e 'quem-inicia-o-mes' (do dados_post.json)
-        # Quando é 'detalhado' precisa ser informado os dias que cada plantonista vai atuar 
-        if month_object['tipo-distribuicao'] == GENERIC_DISTRIBUTION_TYPE: 
-          self.get_generic_distribution(month_object, number_of_days_of_the_journey)
-        elif month_object['tipo-distribuicao'] == DETAILED_DISTRIBUTION_TYPE:    
-          self.get_detailed_distribution()
+          return month_object
+
+  def get_distribution_data_current_month(self, month_object, number_of_days_of_the_journey):
+    '''Faz a separação do mês (utilizando o mês atual) e fazendo a distribuição dos plantonistas'''
+    # O 'tipo-distribuicao' tem influência na distribuição dos dias dos plantonistas
+    # Ela é responsável por dar mais flexibilidade na hora de passar as informações (que está no dados_post.json)
+    # Quando é 'generico' significa que tem um padrão e que é repetido conforme a quantidade informada nas colunas 'revezamento-por-dias' e 'quem-inicia-o-mes' (do dados_post.json)
+    # Quando é 'detalhado' precisa ser informado os dias que cada plantonista vai atuar 
+    if month_object['tipo-distribuicao'] == GENERIC_DISTRIBUTION_TYPE: 
+      self.get_generic_distribution(month_object, number_of_days_of_the_journey)
+    elif month_object['tipo-distribuicao'] == DETAILED_DISTRIBUTION_TYPE:    
+      self.get_detailed_distribution()
 
   def get_generic_distribution(self, month_object, number_of_days_in_the_month):
     day                               = 0
