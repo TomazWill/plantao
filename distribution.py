@@ -1,18 +1,32 @@
 from constants import GENERIC_DISTRIBUTION_TYPE, DETAILED_DISTRIBUTION_TYPE
+from on_duty_worker import OnDutyWorker
 
-
-class Distribution():
+class Distribution(OnDutyWorker):
   def __init__(self):
-    self.on_call_workers = []
+    self.on_call_workers_by_day = []
+    self.list_of_on_call_workers = []
 
-  def set_on_call_workers(self, day_and_worker):
-    self.on_call_workers.append(day_and_worker)
+  def set_on_call_workers_by_day(self, day_and_worker):
+    self.on_call_workers_by_day.append(day_and_worker)
 
-  def get_on_call_workers(self):
-    return self.on_call_workers
+  def get_on_call_workers_by_day(self):
+    return self.on_call_workers_by_day
+
+  def set_workers_of_current_month(self, month_object):
+    for i in self.get_workers_of_current_month(month_object):
+      on_duty_worker = OnDutyWorker(i['nome'], i['telefone'])
+      self.add_worker_to_list(on_duty_worker)
 
   def get_workers_of_current_month(self, month_object):
     return month_object['plantonistas']
+
+  def add_worker_to_list(self, on_duty_worker):
+    self.list_of_on_call_workers.append({'name': on_duty_worker.get_name(), 'phone': on_duty_worker.get_phone_number()})
+
+  def get_list_of_on_duty_worker(self):
+    return self.list_of_on_call_workers
+
+
 
   def filter_data_current_month(self, list_of_months, current_month):
     '''Retorna os dados o mês atual'''
@@ -109,10 +123,10 @@ class Distribution():
 
   def save_worker_on_call_per_day(self, day, is_the_first_worker, mes, on_call_workers__counter):
     if is_the_first_worker == True:
-      self.set_on_call_workers({'day':day+1, 'month':mes['quem-inicia-o-mes']['nome']})
+      self.set_on_call_workers_by_day({'day':day+1, 'month':mes['quem-inicia-o-mes']['nome']})
       # print(f"Dia: {day+1} | Plantonista: {mes['quem-inicia-o-mes']['nome']}")
     else:
-      self.set_on_call_workers({'day':day+1, 'month':mes['plantonistas'][on_call_workers__counter]['nome']})
+      self.set_on_call_workers_by_day({'day':day+1, 'month':mes['plantonistas'][on_call_workers__counter]['nome']})
       # print(f"Dia: {day+1} | Plantonista: {mes['plantonistas'][on_call_workers__counter]['nome']}")
       
 
