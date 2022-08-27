@@ -4,17 +4,15 @@
 <br>
 
 ### Sobre o Projeto:
-- O projeto ainda precisa passar por várias melhorias. <br>
-  Ele se encontra em 'fase de esboço', com muitos bugs 😅... <br>
-  Dedicarei um tempo para resolvê-los e melhorar o funcionamento do projeto! 😉
+- O projeto se encontra em fase de 'teste', com alguns bugs. E será melhorado com o tempo.
 
 <br>
 
-> Como será a alimentação da ferramenta:
-- Este projeto vai trabalhar em cima de dados que será adicionado pelo usuário final. <br>
-  O usuário pode informar 1 mês fechado (sobre quem é os plantonistas e de quantos dias cada um vai atuar)
+> Alimentação da ferramenta:
+- Este projeto vai trabalhar com dados que será adicionado pelo usuário final. <br>
+  O usuário pode informar 1 mês inteiro (sobre quem é os plantonistas e de quantos dias cada um vai atuar)
 
-> Como ficaria para o usuário final:
+> Visão do Usuário Final:
 - Será mostrado quem está de plantão no dia atual (teria como ver por semana ou o mês)
 
 <br>
