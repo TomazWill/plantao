@@ -26,8 +26,3 @@ distribution.set_workers_of_current_month(current_month_object)
 # Inicia processo da distribuição das datas
 distribution.get_distribution_data_current_month(current_month_object, journey.get_number_of_days_of_the_journey())
 print(distribution.get_on_call_workers_by_current_month())
-
-# ETAPAS:
-# 1 - find_worker_by_name
-# 2 - delete_by_index
-# 3 - set_in_first_position_list_of_on_duty_worker
