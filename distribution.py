@@ -4,7 +4,7 @@ from on_duty_worker import OnDutyWorker
 class Distribution(OnDutyWorker):
   def __init__(self):
     self.on_call_workers_by_day = []
-    self.list_of_on_call_workers = []
+    self.list_of_on_call_workers_name = []
 
   def set_on_call_workers_by_day(self, day_and_worker):
     self.on_call_workers_by_day.append(day_and_worker)
@@ -21,11 +21,17 @@ class Distribution(OnDutyWorker):
     return month_object['plantonistas']
 
   def add_worker_to_list(self, on_duty_worker):
-    self.list_of_on_call_workers.append({'name': on_duty_worker.get_name(), 'phone': on_duty_worker.get_phone_number()})
+    self.list_of_on_call_workers_name.append(on_duty_worker.get_name())
 
   def get_list_of_on_duty_worker(self):
-    return self.list_of_on_call_workers
+    return self.list_of_on_call_workers_name
 
+  def find_worker_by_name(self, name, list):
+    return list.index(name)
+
+  #TODO: Continuar fazendo o metodo para reordenar a lista conforme o primeiro plantonista
+  # def reorder_list_of_on_duty_worker(self, name, list):
+  #   return ...
 
 
   def filter_data_current_month(self, list_of_months, current_month):
