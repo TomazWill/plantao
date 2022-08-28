@@ -18,16 +18,11 @@ distribution = Distribution()
 current_month_object = distribution.filter_data_current_month(list_of_months, journey.month)
 
 
-print(f"current_month_object:::\n {distribution.get_workers_of_current_month(current_month_object)}")
+# Faz separação dos plantonistas em uma lista para ser ordenada e utilizada na distribuição
+distribution.set_workers_of_current_month(current_month_object)
+# print(distribution.get_list_of_on_duty_worker())
 
+
+# Inicia processo da distribuição das datas
 distribution.get_distribution_data_current_month(current_month_object, journey.get_number_of_days_of_the_journey())
-print(f"Distribution:::\n {distribution.get_on_call_workers()}")
-
-
-
-
-# TODO: Fazer o uso da classe OnDutyWorker
-# for i in range(0,10):
-#   worker = OnDutyWorker(nome=f"Teste-{i}", telefone=f"{i}-123456789")
-#   worker.add_worker_to_list()
-#   print(f"[{i}] {worker.get_name()}")
+print(distribution.get_on_call_workers_by_current_month())

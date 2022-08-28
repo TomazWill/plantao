@@ -1,24 +1,55 @@
 from constants import GENERIC_DISTRIBUTION_TYPE, DETAILED_DISTRIBUTION_TYPE
+from on_duty_worker import OnDutyWorker
 
-
-class Distribution():
+class Distribution(OnDutyWorker):
   def __init__(self):
-    self.on_call_workers = []
+    self.on_call_workers_by_day = []
+    self.list_of_on_call_workers_name = []
 
-  def set_on_call_workers(self, day_and_worker):
-    self.on_call_workers.append(day_and_worker)
+  def set_on_call_workers_in_current_month(self, day_and_worker):
+    self.on_call_workers_by_day.append(day_and_worker)
 
-  def get_on_call_workers(self):
-    return self.on_call_workers
+  def set_worker_name_to_list(self, name):
+    self.list_of_on_call_workers_name.append(name)
 
-  def get_workers_of_current_month(self, month_object):
-    return month_object['plantonistas']
+  def set_in_first_position_list_of_on_duty_worker(self, worker, list_worker):
+    '''Adiciona elemento na primeira posição na lista'''
+    list_worker.insert(0, worker)
+
+  def set_workers_of_current_month(self, month_object):
+    for i in month_object['plantonistas']:
+      on_duty_worker = OnDutyWorker(i['nome'], i['telefone'])
+      self.set_worker_name_to_list(on_duty_worker.get_name())
+
+  def get_on_call_workers_by_current_month(self):
+    '''Retorna a lista distribuida dos trabalhadores (mês atual)'''
+    return self.on_call_workers_by_day
+
+  def get_list_of_on_duty_worker(self):
+    return self.list_of_on_call_workers_name
+
+  def delete_by_index(self, index, list_worker):
+    list_worker.pop(index)
+
+  def find_worker_by_name(self, worker_name, list_worker):
+    '''Procura o trabalhador e retorna o indice'''
+    return list_worker.index(worker_name)
 
   def filter_data_current_month(self, list_of_months, current_month):
     '''Retorna os dados o mês atual'''
     for month_object in list_of_months:
       if month_object['mes'] == current_month:
           return month_object
+
+  def reorder_list_of_on_duty_worker(self, worker_name, list_worker):
+    worker_index = self.find_worker_by_name(worker_name, list_worker)
+    self.delete_by_index(worker_index, list_worker)
+    self.set_in_first_position_list_of_on_duty_worker(worker_name, list_worker)
+    return list_worker
+
+
+
+
 
   def get_distribution_data_current_month(self, month_object, number_of_days_of_the_journey):
     '''Faz a separação do mês (utilizando o mês atual) e fazendo a distribuição dos plantonistas'''
@@ -66,7 +97,7 @@ class Distribution():
       # Imprime Plantonista conforme a quantidade de dias do revezamento (ex: rotation__by_days = 3)
       if rotation__counter < rotation__by_days:
         rotation__counter += 1
-        self.save_worker_on_call_per_day(day, False, month_object, on_call_workers__counter)
+        self.save_worker_on_call_per_day(day, month_object, on_call_workers__counter)
         day += 1
       else:
         rotation__counter = 0
@@ -92,29 +123,21 @@ class Distribution():
                               rotation__counter):
     rotation = 0
 
-    # TODO: FAZER UMA BUSCA PARA SABER QUAL É O INDEX DO "who_starts_the_month__name" NA LISTA DOS PLANTONISTAS
-    #       COM ISSO PRECISARIA REORDENAR A LISTA COLOCANDO O quem-inicia-o-mes COMO PRIMEIRO, COM ISSO RESOLVERIA
+    # Fazendo a reordenação da lista conforme 'quem-inicia-o-mes'
+    list_of_on_duty_worker = self.reorder_list_of_on_duty_worker(who_starts_the_month__name, self.get_list_of_on_duty_worker())
 
-    # Pernalonga == Gaguinho
-    if who_starts_the_month__name == obj_plantonistas[on_call_workers__counter]['nome']:
+    if who_starts_the_month__name == list_of_on_duty_worker[on_call_workers__counter]:
       if who_starts_the_month__number_days == 3:
         rotation = rotation__counter + 0
       elif who_starts_the_month__number_days == 2:
         rotation = rotation__counter + 1
       elif who_starts_the_month__number_days == 1:
         rotation = rotation__counter + 2
-      
     return rotation
 
-
-  def save_worker_on_call_per_day(self, day, is_the_first_worker, mes, on_call_workers__counter):
-    if is_the_first_worker == True:
-      self.set_on_call_workers({'day':day+1, 'month':mes['quem-inicia-o-mes']['nome']})
-      # print(f"Dia: {day+1} | Plantonista: {mes['quem-inicia-o-mes']['nome']}")
-    else:
-      self.set_on_call_workers({'day':day+1, 'month':mes['plantonistas'][on_call_workers__counter]['nome']})
-      # print(f"Dia: {day+1} | Plantonista: {mes['plantonistas'][on_call_workers__counter]['nome']}")
-      
+  def save_worker_on_call_per_day(self, day, month, on_call_workers__counter):
+    list_of_on_duty_worker = self.get_list_of_on_duty_worker()
+    self.set_on_call_workers_in_current_month({'day':day+1, 'worker':list_of_on_duty_worker[on_call_workers__counter]})
 
   def change_worker(self, on_call_workers__counter, on_call_workers__number):
     if on_call_workers__counter == on_call_workers__number:
@@ -124,5 +147,10 @@ class Distribution():
     return on_call_workers__counter
 
 
+
+
+
+  # TODO: Provavelmente os tipos de distribuição serão separadas
+  # Podendo conter uma classe principal e duas distintas como 'detailed_distribution' e 'generic_distribution'
   def get_detailed_distribution(self):
     print('Aqui Detalhado')
