@@ -25,6 +25,11 @@ class Distribution(OnDutyWorker):
     '''Retorna a lista distribuida dos trabalhadores (mês atual)'''
     return self.on_call_workers_by_day
 
+  def print_on_call_workers_by_current_month(self):
+    '''Mostra a lista distribuida dos trabalhadores (mês atual)'''
+    for i in self.on_call_workers_by_day:
+      print(f"Day: {i['day']} | Worker {i['worker']}")
+
   def get_list_of_on_duty_worker(self):
     return self.list_of_on_call_workers_name
 
