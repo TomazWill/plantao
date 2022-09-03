@@ -17,6 +17,7 @@ class Distribution(OnDutyWorker):
     list_worker.insert(0, worker)
 
   def set_workers_of_current_month(self, month_object):
+    '''Faz a separação do plantonista e chama um método para adicionar em uma lista'''
     for i in month_object['plantonistas']:
       on_duty_worker = OnDutyWorker(i['nome'], i['telefone'])
       self.set_worker_name_to_list(on_duty_worker.get_name())
@@ -25,7 +26,13 @@ class Distribution(OnDutyWorker):
     '''Retorna a lista distribuida dos trabalhadores (mês atual)'''
     return self.on_call_workers_by_day
 
+  def print_on_call_workers_by_current_month(self):
+    '''Mostra a lista distribuida dos trabalhadores (mês atual)'''
+    for i in self.on_call_workers_by_day:
+      print(f"Day: {i['day']} | Worker {i['worker']}")
+
   def get_list_of_on_duty_worker(self):
+    '''Retorna uma lista com os nomes dos trabalhadores (mês atual)'''
     return self.list_of_on_call_workers_name
 
   def delete_by_index(self, index, list_worker):

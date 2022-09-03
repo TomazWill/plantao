@@ -33,7 +33,9 @@
 ### TO DO:
 - Fazer melhorias no código (Passar blocos lógicos para métodos, fazer o uso das classes...)
 - Fazer documentação do Projeto
-
+- Fazer lógica da Distribuição Detalhada
+- Pensar nas formas de interação do cliente, para obter os resultados dinâmicos
+- Verificar de trazer quem está de plantão no dia atual como default (ter opção de ver o inicio e o final do plantão da pessoa)
 
 
 <br>
