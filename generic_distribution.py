@@ -1,13 +1,11 @@
-from constants import GENERIC_DISTRIBUTION_TYPE
 from distribution import Distribution
 
 class GenericDistribution(Distribution):
 
-  def get_distribution_data_current_month(self, month_object, number_of_days_of_the_journey):
-    if month_object['tipo-distribuicao'] == GENERIC_DISTRIBUTION_TYPE: 
-      self.get_generic_distribution(month_object, number_of_days_of_the_journey)
-
   def get_generic_distribution(self, month_object, number_of_days_in_the_month):
+    '''A Distribuição Genérica segue um padrão que é repetido conforme 
+       a quantidade informada nas colunas 'revezamento-por-dias' 
+       e 'quem-inicia-o-mes' (do dados_post.json).'''
     day                               = 0
     on_call_workers__counter          = 0
     on_call_workers__number           = len(month_object['plantonistas'])
@@ -42,7 +40,7 @@ class GenericDistribution(Distribution):
       # Imprime Plantonista conforme a quantidade de dias do revezamento (ex: rotation__by_days = 3)
       if rotation__counter < rotation__by_days:
         rotation__counter += 1
-        self.save_worker_on_call_per_day(day, month_object, on_call_workers__counter)
+        self.save_worker_on_call_per_day(day, on_call_workers__counter)
         day += 1
       else:
         rotation__counter = 0
