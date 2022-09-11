@@ -1,8 +1,7 @@
-import abc
-
+from constants import DETAILED_DISTRIBUTION_TYPE, GENERIC_DISTRIBUTION_TYPE
 from on_duty_worker import OnDutyWorker
 
-class Distribution(OnDutyWorker, metaclass=abc.ABCMeta):
+class Distribution(OnDutyWorker):
   def __init__(self):
     self.on_call_workers_by_day = []
     self.list_of_on_call_workers_name = []
@@ -18,7 +17,7 @@ class Distribution(OnDutyWorker, metaclass=abc.ABCMeta):
     list_worker.insert(0, worker)
 
   def set_workers_of_current_month(self, month_object):
-    '''Faz a separação do plantonista e chama um método para adicionar em uma lista'''
+    '''Faz separação dos plantonistas em uma lista para ser ordenada e utilizada na distribuição'''
     for i in month_object['plantonistas']:
       on_duty_worker = OnDutyWorker(i['nome'], i['telefone'])
       self.set_worker_name_to_list(on_duty_worker.get_name())
@@ -57,16 +56,15 @@ class Distribution(OnDutyWorker, metaclass=abc.ABCMeta):
 
 
 
-
-  @abc.abstractmethod
-  def get_distribution_data_current_month(self, month_object, number_of_days_of_the_journey):
-    '''Faz a separação do mês (utilizando o mês atual) e fazendo a distribuição dos plantonistas'''
-    # O 'tipo-distribuicao' tem influência na distribuição dos dias dos plantonistas
-    # Ela é responsável por dar mais flexibilidade na hora de passar as informações (que está no dados_post.json)
-    # Quando é 'generico' significa que tem um padrão e que é repetido conforme a quantidade informada nas colunas 'revezamento-por-dias' e 'quem-inicia-o-mes' (do dados_post.json)
-    # Quando é 'detalhado' precisa ser informado os dias que cada plantonista vai atuar 
-    ...
-
+  def isGenericDistribution(self, month_object):
+    '''Quando é 'generico' significa que tem um padrão e que é repetido conforme a quantidade informada 
+       nas colunas 'revezamento-por-dias' e 'quem-inicia-o-mes' (do dados_post.json);
+       Quando é 'detalhado' precisa ser informado os dias que cada plantonista vai atuar;
+    '''
+    if month_object['tipo-distribuicao'] == GENERIC_DISTRIBUTION_TYPE:
+      return True
+    elif month_object['tipo-distribuicao'] == DETAILED_DISTRIBUTION_TYPE:
+      return False
 
 
   def validate_number_of_days(self, who_starts_the_month__number_days, rotation__by_days):
@@ -99,7 +97,7 @@ class Distribution(OnDutyWorker, metaclass=abc.ABCMeta):
         rotation = rotation__counter + 2
     return rotation
 
-  def save_worker_on_call_per_day(self, day, month, on_call_workers__counter):
+  def save_worker_on_call_per_day(self, day, on_call_workers__counter):
     list_of_on_duty_worker = self.get_list_of_on_duty_worker()
     self.set_on_call_workers_in_current_month({'day':day+1, 'worker':list_of_on_duty_worker[on_call_workers__counter]})
 
