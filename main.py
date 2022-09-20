@@ -6,6 +6,7 @@ from generic_distribution   import GenericDistribution
 from detailed_distribution  import DetailedDistribution
 from distribution           import Distribution
 from journey                import Journey
+from data_manager           import DataManager
 
 # Iniciando Jornada
 journey = Journey()
@@ -13,14 +14,14 @@ print(journey)
 print("---------------------------------")
 
 # Pegando informações que serão utilizadas para fazer a distribuição dos plantonistas no mês
-jsonFile = ReadFileJson(file="dados/dados_post.json")
+jsonFile = ReadFileJson(file="dados/dados_post_original.json")
 list_of_months = jsonFile.get_full_data()
 
-# DISTRIBUIÇÃO
-distribution = Distribution()
-current_month_object = distribution.filter_data_current_month(list_of_months, journey.month)
+# Pegando informações do mês atual
+dataManager = DataManager()
+current_month_object = dataManager.get_current_month(list_of_months, journey.month)
 
-if (distribution.isGenericDistribution(current_month_object)):
+if (Distribution().isGenericDistribution(current_month_object)):
   # DISTRIBUIÇÃO GENERICA
   genericDistribution = GenericDistribution()
   genericDistribution.set_workers_of_current_month(current_month_object)
