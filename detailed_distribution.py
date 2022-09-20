@@ -17,3 +17,7 @@ class DetailedDistribution(Distribution):
         self.save_worker_on_call_per_day(day-1, index_worker)
 
     self.reorder_list_of_on_duty_worker()
+
+  def get_on_call_workers_by_current_month(self):
+    '''Retorna a lista distribuída dos trabalhadores (mês atual)'''
+    return self.on_call_workers_by_day
