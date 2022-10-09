@@ -68,12 +68,14 @@ class GenericDistribution(Distribution):
     list_of_on_duty_worker = self.reorder_list_of_on_duty_worker(who_starts_the_month__name, self.get_list_of_on_duty_worker())
 
     if who_starts_the_month__name == list_of_on_duty_worker[on_call_workers__counter]:
-      if who_starts_the_month__number_days == 3:
+      if who_starts_the_month__number_days == 4:
         rotation = rotation__counter + 0
-      elif who_starts_the_month__number_days == 2:
+      elif who_starts_the_month__number_days == 3:
         rotation = rotation__counter + 1
-      elif who_starts_the_month__number_days == 1:
+      elif who_starts_the_month__number_days == 2:
         rotation = rotation__counter + 2
+      elif who_starts_the_month__number_days == 1:
+        rotation = rotation__counter + 3
     return rotation
 
 
